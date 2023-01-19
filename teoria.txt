@@ -1,0 +1,215 @@
+JSX es como una mezcla de javascript ty html, te perite tener funcionalidades de javascript
+con una apariencia de html.
+
+Solo puede devolver un elemento:
+
+JSX VALIDO
+    <div>
+        <p>Paragraph One</p>
+        <p>Paragraph Two</p>
+        <p>Paragraph Three</p>
+    </div>
+
+Para agregar comentarios dentro de JSX, se utiliza la sintaxis {/* */} para envolver el texto 
+del comentario. 
+
+Con React se puede renderizar el JSX en el HTML DOM con ReactDOM. El metodo funciona asi:
+ReactDOM.render(componentToRender, targetNode)
+
+Diferencias de sintaxis con HTML: className vs class, onClick vs onclick.
+Tambien todas las etiquetas pueden tener autocierre, pero ninguna puede quedar sin cerrar.
+
+COMPONENTE FUNCIONAL SIN ESTADO
+Hay dos maneras de crear un componente React. La primera forma es utilizar una función 
+JavaScript. Definir un componente de esta manera crea un componente funcional sin estado.
+    
+    const DemoComponent = function() {
+    return (
+        <div className='customClass' />
+    );
+    };
+
+COMPONENTE CREADO CON CLASES (no se usa)
+
+    class Kitten extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+        <h1>Hi</h1>
+        );
+    }
+    }
+
+PARENT Y CHILDREN
+
+Para renderizar un componente como hijo en un componente React, se incluye el nombre del 
+componente escrito como una etiqueta HTML personalizada en el JSX. Por ejemplo, en el método 
+render se puede escribir:
+
+    return (
+        <App>
+            <Navbar />
+            <Dashboard />
+            <Footer />
+        </App>
+    )
+
+RENDERIZAR COMPONENTES EN EL DOM
+
+Tamnbiwn se usa ReactDOM(), pero en vez de escribir el JSX se escribe el componente de la forma
+<Componente />
+
+PROPS 
+
+Digamos, que tienes un componente App que devuelve un componente hijo llamado Welcome, el 
+cual es un componente funcional sin estado. Puedes pasarle una propiedad llamada user a 
+Welcome escribiendo:
+
+    <App>
+        <Welcome user='Mark' />
+    </App>
+
+Tambien podemos pasar como props funciones o metodos de javascript usando las llaves {},
+y arrays como {[amarillo, naranja, etc]}
+
+Para que Welcome utilice esas props, se lo declara de la siguiente manera:
+    const Welcome = (props) => <h1>Hello, {props.user}!</h1>
+
+PROPS PREDETERMINADAS
+
+Supongamos que tenemos el componente Componente. para asignarle props predeterminadas, debajo
+del componente escribimos:
+
+Componente.defualtProps = { variable: valor}
+
+PRPS TYPES
+
+Es recomendable establecer prop types cuando ya sabemos de que tipo va a ser la propiedad
+con antelacion. Para poder usarla hay que requerirla en la app como :
+
+    import PropTypes from 'prop-types';
+
+Componente.propTypes = { prop: PropTypes.tipoDeDato.isRequired }
+
+PROPS EN COMPONENTES DE CLASE
+
+en el componente padre, al llamar al componente hijo le pasamos las props de la misma manera.
+pero en el componente hijo, al momento de utilizar la prop usamos: this.props.propiedad
+
+CONVENCIONES: si no aclara "component funcional", se esta refiriendo a un componente de clase.
+Si no aclara que es sin estado, quiere decir que mantiene su propio estado interno.
+
+Para que un componente de clase tenga estado por si mismo, es decir que no lo pases como 
+default o que no se lo pase un componente padre, es necesario declararle el estado en el 
+constructor de la siguiente manera:
+    super(props);
+    this.state = {
+        propiedad: valor
+    }
+
+Despues, en el return accedes entre llave  {this.state.propiedad}
+Sino, en el render antes del return podes usar javascript normal y hacer funciones y operar
+con el estado.
+
+Para hacer cambios en el estado del componente se utiliza setState de la siguiente manera:
+    this.setState({
+        username: 'Lewis'
+    });
+
+THIS: ver el ejemplo de 'ejercicio boton clase'. Hay que usar el this de forma media rara
+y explicita para que no haya problemas.
+
+Para acceder al valor del estado actual dentro del setState, tenemos que pasarle una funcion
+con los parametros 'state' y 'props', o solo 'state'. De la siguiente manera:
+    this.setState((state, props) => ({
+        counter: state.counter + props.increment
+    }));
+ FIJARSE QUE ONDA CON ESOS PARENTESIS, UN EJERCICIO ME LOS TOMO MAL, SERIA:
+     this.setState((state, props) => {
+        counter: state.counter + props.increment
+    });
+
+ENTRADA CONTROLADA
+Podemos controlar la informacion de un input, por ejemlo, asignandole un atributo 
+value={this.state.input}, y poniendole un manejador de eventoos onChange que active un metodo
+Este metodo debera recibir un 'event' y setear el nuevo estado con el valor del event de La
+siguiente manera 
+    metodo(event){
+        this.setState({
+            input : event.target.value
+        })
+    }
+
+PASAR ESTADO DE COMPONENTE DE ESTADO COMO PROPS AL COMPONENTE HIJO
+En el componente de estado (padre), al renderizar el componente hijo se pone:
+    propiedad: {this.state.propiedad}
+En el componente hijo se usa:
+    {this.props.propiedad}
+
+COMONENT DID MOUNT
+La mejor práctica con React es ubicar las llamadas API o cualquier llamada a tu servidor
+en el método de ciclo de vida componentDidMount().
+Tambien los addEventListener suelen ir aca
+
+chequear lo de shoulComponentUpdate()
+
+ESTILOS EN LINEA. pasar del guion al camel case, todo se supone q esta en px. para usar 'em'
+por ejemplo hay que usar comillas '4em'
+
+<div style={{color: "yellow", fontSize: 16}}>Mellow Yellow</div>
+
+podemos crer una constante style y asignarla como valor a la propiedad style
+
+JAVASCRIPT EN RENDER
+podemos usar js de cualquier forma en el metodo render antes del return, y despues acceder
+a las constantes que creamos en el return solo poniendo la constante entre llaves {}
+
+Tambien se pueden poner los return() dentro de una condicion para mostra o no algunas cosas 
+
+CONDICIONAL CON &&
+
+Se pueden escibir condiciones de la siguiente manera: 
+{condition && <p>markup</p>}, que indica que si la condicion es true va a devolver las <p>
+sino, no devuelve nada. Se pueden poner muchas condiciones poniendoo && despues de cada una.
+Ejemplo:
+Metodo tradicional:
+render() {
+    if(this.state.display){
+        return (
+            <div>
+                <button onClick={this.toggleDisplay}>Toggle Display</button>
+                <h1>Displayed!</h1>
+            </div>
+    )} else {
+        return (
+            <div>
+                <button onClick={this.toggleDisplay}>Toggle Display</button>
+            </div>
+    }
+  }
+Metodo &&:
+render() {
+    return (
+       <div>
+         <button onClick={this.toggleDisplay}>Toggle Display</button>
+         {this.state.display && <h1>Displayed!</h1>}
+       </div>
+    );
+  }
+
+CONDICONAL TERNARIO
+Para usar condicionales de forma facis con JSX se suelen usar condicionales ternarios entre
+llaves {condition ? expressionIfTrue : expressionIfFalse;}. Recordar que en la expresion si
+si es falsa se puede abrir otro condicional.
+
+Tambien podes usar los condicionales ternarios en las props de un componente hijo y en
+los CSS inline.
+
+
+
+
+
+
